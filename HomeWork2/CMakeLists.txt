@@ -1,13 +1,13 @@
 cmake_minimum_required(VERSION 3.5)
-project(HomeWork2 LANGUAGES CXX)
+project(List LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(SOURCE_EXE main.cpp)
 
-include_directories(MyVector)
-add_executable(HomeWork2 ${SOURCE_EXE})
+include_directories(MyList)
+add_executable(List ${SOURCE_EXE})
 
-add_subdirectory(MyVector)
+add_subdirectory(MyList)
 
-target_link_libraries(HomeWork2 MyVector)
+target_link_libraries(List MyList)
