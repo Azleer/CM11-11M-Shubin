@@ -95,7 +95,7 @@ void MyList<TYPE>::smerge(MyList *list)
    Node* itY = list->Head;
    Node* buffX = itX;
    Node* buffY = itY;
-   MyList temp;
+   
 
     if(this->countOfNods > list->countOfNods)
     {
@@ -104,15 +104,14 @@ void MyList<TYPE>::smerge(MyList *list)
             if (!this->compare(itY, itX))
             {
                 itX = itX->next;
-                //this->cut(buffX);
-                temp.insert(Tail, buffX);
+                this->move(Tail, buffX);
                 buffX = itX;
             }
             else
             {
                 itY = itY->next;
-                //list->cut(buffY);
-                temp.insert(Tail, buffY);
+                list->cut(buffY);
+                this->insert(itX, buffY);
                 buffY = itY;
             }
 
@@ -230,7 +229,8 @@ void MyList<TYPE>::insert(const TYPE &value, size_t index)
 
 template<typename TYPE>
 void MyList<TYPE>::insert(Node* it, Node* node)
-{
+{   
+    if (it == no)
 
     if (Head == nullptr)
     {
