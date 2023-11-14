@@ -53,7 +53,7 @@ public:
     void smerge(MyList* list);
     bool compare(Node* lhs, Node* rhs);
     void insert(Node* it, Node* node);
-    void cut(Node* it);
+    Node* cut(Node* it);
 };
 
 
@@ -91,35 +91,50 @@ void MyList<TYPE>::swap(Node *lhs_ptr, Node *rhs_ptr)
 template<typename TYPE>
 void MyList<TYPE>::smerge(MyList *list)
 {
+    /*
    Node* itX = Head;
    Node* itY = list->Head;
    Node* buffX = itX;
    Node* buffY = itY;
-   MyList temp;
+
 
     if(this->countOfNods > list->countOfNods)
     {
         while(itX != nullptr)
         {
-            if (!this->compare(itY, itX))
-            {
-                itX = itX->next;
-                //this->cut(buffX);
-                temp.insert(Tail, buffX);
-                buffX = itX;
-            }
-            else
-            {
+            while(itY != nullptr) {
+                if(this->compare(itX, itY)) {
+                    this->move(itX,itY);
+                }
+
+
                 itY = itY->next;
-                //list->cut(buffY);
-                temp.insert(Tail, buffY);
-                buffY = itY;
             }
 
-
+            itX = itX->next;
         }
 
     }
+*/
+    Node* it_this = Head;
+    while (list->Head != nullptr) {
+        if (it_this == nullptr) {
+            this->insert(Tail, list->cut(list->Head));
+            list->Head = nullptr;
+            continue;
+        }
+
+        if (!this->compare(it_this, list->Head))
+        {
+            this->insert(it_this, list->cut(list->Head));
+        }
+        else
+        {
+            it_this = it_this->next;
+        }
+
+    }
+
 
 
 
@@ -231,6 +246,7 @@ void MyList<TYPE>::insert(const TYPE &value, size_t index)
 template<typename TYPE>
 void MyList<TYPE>::insert(Node* it, Node* node)
 {
+    if (it == node) {return;}
 
     if (Head == nullptr)
     {
@@ -272,10 +288,14 @@ void MyList<TYPE>::insert(Node* it, Node* node)
 }
 
 template<typename TYPE>
-void MyList<TYPE>::cut(Node *it)
+typename MyList<TYPE>::Node *MyList<TYPE>::cut(Node *it)
 {
     if (it == nullptr) {
-        return;
+        return it;;
+    }
+
+    if (it->next == nullptr && it->prev == nullptr) {
+        return it;
     }
 
     if (Head == it)
@@ -285,7 +305,7 @@ void MyList<TYPE>::cut(Node *it)
         it->next = nullptr;
         it->prev = nullptr;
         --countOfNods;
-        return;
+        return it;;
     }
 
     if (Tail == it)
@@ -295,7 +315,7 @@ void MyList<TYPE>::cut(Node *it)
         it->next = nullptr;
         it->prev = nullptr;
         --countOfNods;
-        return;
+        return it;;
     }
     else
     {
@@ -306,7 +326,10 @@ void MyList<TYPE>::cut(Node *it)
         it->prev = nullptr;
         --countOfNods;
     }
+    return it;
 }
+
+
 
 template<typename TYPE>
 typename MyList<TYPE>::Node* MyList<TYPE>::Min()
