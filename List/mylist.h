@@ -1,4 +1,4 @@
-﻿#ifndef MYLIST_H
+#ifndef MYLIST_H
 #define MYLIST_H
 
 #include <iostream>
@@ -33,8 +33,6 @@ private:
 
 
 
-
-
 public:
     MyList();
     void insert(const TYPE &value, size_t index);
@@ -48,12 +46,14 @@ public:
     void move(Node* prevnode, Node* node);
 
     Node* getNode(size_t index);
-    Node* Min();
+    Node* Max();
     void pastesort();
     void smerge(MyList* list);
     bool compare(Node* lhs, Node* rhs);
     void insert(Node* it, Node* node);
     Node* cut(Node* it);
+    MyList split(size_t it);
+    MyList& operator=(const MyList& right);
 };
 
 
@@ -89,38 +89,22 @@ void MyList<TYPE>::swap(Node *lhs_ptr, Node *rhs_ptr)
 }
 
 template<typename TYPE>
+MyList<TYPE> &MyList<TYPE>::operator=(const MyList &right)
+{
+    this->Head = right.Head;
+    this->Tail = right.Tail;
+    this->countOfNods = right.countOfNods;
+    return *this;
+}
+
+template<typename TYPE>
 void MyList<TYPE>::smerge(MyList *list)
 {
-    /*
-   Node* itX = Head;
-   Node* itY = list->Head;
-   Node* buffX = itX;
-   Node* buffY = itY;
-
-
-    if(this->countOfNods > list->countOfNods)
-    {
-        while(itX != nullptr)
-        {
-            while(itY != nullptr) {
-                if(this->compare(itX, itY)) {
-                    this->move(itX,itY);
-                }
-
-
-                itY = itY->next;
-            }
-
-            itX = itX->next;
-        }
-
-    }
-*/
     Node* it_this = Head;
     while (list->Head != nullptr) {
+
         if (it_this == nullptr) {
             this->insert(Tail, list->cut(list->Head));
-            list->Head = nullptr;
             continue;
         }
 
@@ -134,17 +118,26 @@ void MyList<TYPE>::smerge(MyList *list)
         }
 
     }
-
-
-
-
-
 }
 
 template<typename TYPE>
 void MyList<TYPE>::pastesort()
 {
-    this->move(Head, this->Min());
+
+
+    MyList temp;
+    temp = this->split(this->countOfNods/2);
+
+    if (this->countOfNods <= 1) {
+        this->smerge(&temp);
+    } else {
+        temp.pastesort();
+        this->pastesort();
+    }
+
+
+
+
 
 }
 
@@ -291,10 +284,20 @@ template<typename TYPE>
 typename MyList<TYPE>::Node *MyList<TYPE>::cut(Node *it)
 {
     if (it == nullptr) {
-        return it;;
+        return it;
     }
 
-    if (it->next == nullptr && it->prev == nullptr) {
+    if (it->next == nullptr && it->prev == nullptr && countOfNods != 1) {
+        return it;
+    }
+
+    if (countOfNods == 1 && it == Tail)
+    {
+       Tail->next = nullptr;
+       Tail->prev = nullptr;
+       Tail = nullptr;
+       Head = nullptr;
+       --countOfNods;
         return it;
     }
 
@@ -305,7 +308,7 @@ typename MyList<TYPE>::Node *MyList<TYPE>::cut(Node *it)
         it->next = nullptr;
         it->prev = nullptr;
         --countOfNods;
-        return it;;
+        return it;
     }
 
     if (Tail == it)
@@ -315,7 +318,7 @@ typename MyList<TYPE>::Node *MyList<TYPE>::cut(Node *it)
         it->next = nullptr;
         it->prev = nullptr;
         --countOfNods;
-        return it;;
+        return it;
     }
     else
     {
@@ -325,24 +328,44 @@ typename MyList<TYPE>::Node *MyList<TYPE>::cut(Node *it)
         it->next = nullptr;
         it->prev = nullptr;
         --countOfNods;
+        return it;
     }
     return it;
 }
 
+template<typename TYPE>
+MyList<TYPE> MyList<TYPE>::split(size_t index)
+{
+    if (countOfNods <= 1) return nullptr;
 
+    MyList temp;
+    Node* newhead = this->getNode(index);
+
+    temp.Head =  newhead;
+    temp.Tail = Tail;
+
+    this->Tail = newhead->prev;
+    Tail->next = nullptr;
+    newhead->prev = nullptr;
+
+    temp.countOfNods = this->countOfNods - index + 1;
+    this->countOfNods = index - 1;
+
+    return temp;
+}
 
 template<typename TYPE>
-typename MyList<TYPE>::Node* MyList<TYPE>::Min()
+typename MyList<TYPE>::Node* MyList<TYPE>::Max()
 {
     Node* it = Head->next;
-    Node* Min = Head;
+    Node* Max = Head;
     while (it != nullptr) {
-        if (this->compare(it, Min)) {
-            Min = it;
+        if (!this->compare(it, Max)) {
+            Max = it;
         }
         it = it->next;
     }
-    return Min;
+    return Max;
 }
 
 template<typename TYPE>
@@ -410,7 +433,7 @@ void MyList<TYPE>::swap(size_t lhs, size_t rhs)
 template<typename TYPE>
 void MyList<TYPE>::sort()
 {
-    // слияние + вставка
+
 
 
 
@@ -450,5 +473,7 @@ void MyList<TYPE>::move(Node *prevnode, Node *node)
     this->cut(node);
     this->insert(prevnode->next, node);
 }
+
+
 
 #endif // MYLIST_H
