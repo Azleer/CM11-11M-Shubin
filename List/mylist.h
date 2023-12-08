@@ -41,19 +41,22 @@ public:
     void erease(size_t index);
     void swap(size_t lhs, size_t rhs);
     void sort();
+    void bublesort();
     void print(); // optional, debug
 
     void move(Node* prevnode, Node* node);
 
     Node* getNode(size_t index);
     Node* Max();
-    void pastesort();
+    MyList* pastesort();
     void smerge(MyList* list);
     bool compare(Node* lhs, Node* rhs);
     void insert(Node* it, Node* node);
     Node* cut(Node* it);
     MyList split(size_t it);
     MyList& operator=(const MyList& right);
+
+    bool is_sort();
 };
 
 
@@ -98,6 +101,22 @@ MyList<TYPE> &MyList<TYPE>::operator=(const MyList &right)
 }
 
 template<typename TYPE>
+bool MyList<TYPE>::is_sort()
+{
+    bool is_sort = true;
+    Node* lhs = Head;
+    Node* rhs = Head->next;
+    while (rhs != nullptr)
+    {
+
+        is_sort *= this->compare(lhs,rhs);
+        lhs = lhs->next;
+        rhs = rhs->next;
+    }
+    return is_sort;
+}
+
+template<typename TYPE>
 void MyList<TYPE>::smerge(MyList *list)
 {
     Node* it_this = Head;
@@ -121,18 +140,21 @@ void MyList<TYPE>::smerge(MyList *list)
 }
 
 template<typename TYPE>
-void MyList<TYPE>::pastesort()
+ MyList<TYPE>* MyList<TYPE>::pastesort()
 {
-
-
     MyList temp;
-    temp = this->split(this->countOfNods/2);
 
-    if (this->countOfNods <= 1) {
+
+    temp = this->split(this->countOfNods/2 + 1);
+
+    if (this->countOfNods <= 1 && temp.countOfNods <= 1) {
         this->smerge(&temp);
+        return this;
     } else {
         temp.pastesort();
         this->pastesort();
+        this->smerge(&temp);
+        return this;
     }
 
 
@@ -174,7 +196,7 @@ typename MyList<TYPE>::Node* MyList<TYPE>::getNode(size_t index)
 template<typename TYPE>
 bool MyList<TYPE>::compare(Node* lhs, Node* rhs)
 {
-    return *lhs->data < *rhs->data;
+    return *lhs->data <= *rhs->data;
 }
 
 template<typename TYPE>
@@ -336,7 +358,7 @@ typename MyList<TYPE>::Node *MyList<TYPE>::cut(Node *it)
 template<typename TYPE>
 MyList<TYPE> MyList<TYPE>::split(size_t index)
 {
-    if (countOfNods <= 1) return nullptr;
+    if (countOfNods <= 1) return *this;
 
     MyList temp;
     Node* newhead = this->getNode(index);
@@ -436,11 +458,44 @@ void MyList<TYPE>::sort()
 
 
 
+    if (this->countOfNods % 2 == 0)
+    {
+        this->pastesort();
+    } else {
+        MyList temp;
+        auto it = this->cut(Tail);
+        temp.insert(temp.Head, it);
+        this->pastesort();
+        this->smerge(&temp);
+    }
 
-    MyList temp;
 
-    Head = temp.Head;
-    Tail = temp.Tail;
+
+
+
+
+}
+
+template<typename TYPE>
+void MyList<TYPE>::bublesort()
+{
+    Node* lhs = Head;
+    Node* rhs = Head->next;
+   while (!this->is_sort())
+   {
+       if (rhs == nullptr) {
+           lhs = Head;
+           rhs = Head->next;
+       }
+
+    if (!this->compare(lhs,rhs)) {
+        this->swap(lhs, rhs);
+    }
+
+    lhs = lhs->next;
+    rhs = rhs->next;
+   }
+
 
 }
 
