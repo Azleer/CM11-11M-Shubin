@@ -1,13 +1,15 @@
 #include <string>
 #include <iostream>
-#include "mission.h"
+//#include "mission.h"
 #include "dive.h"
+#include "program.h"
 
 
 int main ()
 {
-    printhello();
-    Dive a;
+    //printhello();
+    Program missions;
+    missions.run();
 
     return 0;
 }

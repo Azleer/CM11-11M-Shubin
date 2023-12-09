@@ -4,7 +4,10 @@
 #include<iostream>
 
 //Куку.
-void printhello();
+class Mission {
+
+
+};
 
 #endif // MISSION_H
 
