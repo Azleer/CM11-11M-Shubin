@@ -23,15 +23,9 @@ private:
 
     Node* newNode(const TYPE &value);
     void deleteNode(Node* element);
-    //Node* getNode(size_t index);
+
 
     void swap(Node* lhs_ptr,  Node* rhs_ptr);
-
-
-
-
-
-
 
 public:
     MyList();
@@ -455,7 +449,7 @@ void MyList<TYPE>::swap(size_t lhs, size_t rhs)
 template<typename TYPE>
 void MyList<TYPE>::sort()
 {
-
+    std::cout << "use .bublesort()" << std::endl;
 
 
     if (this->countOfNods % 2 == 0)
