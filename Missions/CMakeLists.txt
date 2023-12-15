@@ -11,3 +11,6 @@ add_executable(HomeWork3 ${SOURCE_EXE})
 add_subdirectory(Mission)
 
 target_link_libraries(HomeWork3 Mission)
+
+install(TARGETS HomeWork3
+    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})

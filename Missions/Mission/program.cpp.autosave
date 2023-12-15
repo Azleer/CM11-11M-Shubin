@@ -23,9 +23,15 @@ Program::Program() //Открыть файл и заполнить структ�
 
 void Program::run()
 {//enum class cmd {non, clear, help, exit, open, close, save, add, rm, ins, edit, mv, chk, lk};
+
+    this->task.push_back(std::make_unique<Move>());
+    this->task.push_back(std::make_unique<Lift>());
+    this->task.push_back(std::make_unique<Dive>());
+    this->task.push_back(std::make_unique<Return>());
+    countOfMission = 3;
+
     while(!this->Exit)
     {
-       std::cout.flush();
        std:: cout <<"#> ";
        std::string cmd;
        std::getline(std::cin, cmd);
@@ -50,7 +56,7 @@ void Program::run()
            case cmd::rm:    { this->rm(command);    break; }
            case cmd::edit:  { this->edit(command);  break; }
            case cmd::mv:    { this->mv(command);    break; }
-           case cmd::chk:   { this->chk();   break; }
+           case cmd::chk:   { this->chk(command);   break; }
            case cmd::lk:    { this->lk(command);    break; }
            case cmd::non:   { this->non();   break; }
            case cmd::wf:   { this->wf();   break; }
@@ -71,7 +77,7 @@ void Program::wf()
 
 void Program::non()
 {
-   // std::cout << "There is no such command." << std::endl;
+    std::cout << "There is no such command." << std::endl;
 }
 
 void Program::clear()
@@ -84,8 +90,6 @@ void Program::help()
     std::cout << "Syntax:  [COMMAND] [KEY_1], [KEY_2], ... \n\nCommands:" << std::endl;
 
     std::cout << "clear \t\t\t\t\t - Clear console\n"<< std::endl;
-    std::cout << "wf \t\t\t\t\t - Print filename\n"<< std::endl;
-    std::cout << "rename [filename] \t\t\t - Rename file\n"<< std::endl;
     std::cout << "exit \t\t\t\t\t - exit program\n"<< std::endl;
     std::cout << "open [filename] \t\t\t - open file [filename] and load mission data.\n"<< std::endl;
     std::cout << "close \t\t\t\t\t - close opened file.\n"<< std::endl;
@@ -144,7 +148,6 @@ void Program::open(std::string& filname)
 
 void Program::close()
 {
-
     if (is_save) {
         task.clear();
         this->filename = "";
@@ -153,7 +156,6 @@ void Program::close()
         std::cout << "Do you want to save the file? (y/n)"  << std::endl;
         while (!(ans == 'y' || ans == 'n')) {
             std::cin >> ans;
-
         }
         if (ans == 'n')
         {
@@ -170,12 +172,10 @@ void Program::close()
 
     }
 
-
 }
 
 void Program::save()
 {
-    if (erors){ this->chk(); return;}
     std::ofstream file;
     if (this->filename == "") {
         std::cout << "Enter file name" << std::endl;
@@ -205,31 +205,10 @@ void Program::parse(std::string &data)
     std::vector<std::string> token(begin, end);
 
     if (token[0] == "Move") {
-        this->countOfMission++;
-        this->task.push_back(std::make_unique<Move>());
-        auto ptr = dynamic_cast<Move*>(this->task.back().get());
-        ptr->setData(std::stoi(token[3]), std::stoi(token[5]), (Action)std::stoi(token[17]), (Sensor)std::stoi(token[13]), std::stoi(token[9]));
-        return;
+         this->task.push_front(std::make_unique<Move>());
+         task[0]
     }
-    if (token[0] == "Dive") {
-        this->countOfMission++;
-        this->task.push_back(std::make_unique<Dive>());
-        auto ptr = dynamic_cast<Dive*>(this->task.back().get());
-        ptr->setData(std::stoi(token[2]), (Sensor)std::stoi(token[6]), (Action)std::stoi(token[10]));
-        return;
-    }
-    if (token[0] == "Lift") {
-        this->countOfMission++;
-        this->task.push_back(std::make_unique<Lift>());
-        auto ptr = dynamic_cast<Lift*>(this->task.back().get());
-        ptr->setData(std::stoi(token[2]), (Sensor)std::stoi(token[6]), (Action)std::stoi(token[10]));
-        return;
-    }
-    if (token[0] == "Return") {
-        this->countOfMission++;
-        this->task.push_back(std::make_unique<Return>());
-        return;
-    }
+
 }
 
 void Program::rename(std::string& name )
@@ -324,7 +303,7 @@ void Program::mv(const std::vector<std::string>& cmd)
     }
 }
 
-void Program::chk()
+void Program::chk(const std::vector<std::string>& cmd)
 {
     int numberMission = 0;
     for (auto &v : this->task) {
@@ -353,7 +332,6 @@ void Program::chk()
 
         if( !((X>=0 && X<=10000) && (Y>=0 && Y<=10000) && (Z>=0 && Z <=100 )))
         {
-            erors = true;
             std::cout << "ERROR The mission " << numberMission << " crouched down to a mistake." << std::endl;
             return;
         }
@@ -366,7 +344,6 @@ void Program::chk()
     //std::cout << (int)this->task.back().get()->mission << std::endl;
     if (this->task.back().get()->getTypeMission() != Type::Return) {
         std::cout << "Mission planning should end with a Return!" << std::endl;
-        erors = true;
         return;
     }
 

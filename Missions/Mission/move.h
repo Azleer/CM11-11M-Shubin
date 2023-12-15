@@ -1,25 +1,27 @@
-#ifndef DIVE_H
-#define DIVE_H
+#ifndef MOVE_H
+#define MOVE_H
 #include"mission.h"
-class Dive :  public Mission
+
+class Move : public Mission
 {
 public:
-    Dive() : Mission() {}
+    Move() : Mission() {}
     void print();
     void help();
     Type getTypeMission();
-    void setData(double dive, Sensor sns, Action type);
+    void setData(double x, double y, Action type, Sensor sns, double accuracy);
     void save(std::ofstream& file);
     void load(std::ifstream& file);
+
 
     struct inf
     {
         Action type = Action::Other;
         Sensor sns = Sensor::Other;
-        double dive = 0;
+        double x = 0, y = 0;
+        double accuracy = 0;
     };
     inf data;
-
 };
 
-#endif // DIVE_H
+#endif // MOVE_H

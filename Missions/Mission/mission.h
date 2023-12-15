@@ -2,25 +2,25 @@
 #define MISSION_H
 
 #include<iostream>
+#include<fstream>
 
-enum class Type   {Dive, Lift, Move, Return};
-enum class Action {Stiral, Straight};
-enum class Sensor {EchoSounder, Depth};
+
+enum class Type   {Dive, Lift, Move, Return, Other};
+enum class Action {Stiral, Straight, Other};
+enum class Sensor {EchoSounder, Depth, Other};
+
 //Куку.
 class Mission {
 public:
-    Type mission;
-    struct data
-    {
-       Action type;
-       Sensor sns;
-       double depth;
-       double x, y, z;
-       double accuracy;
-    };
-    void info();
-
+    Mission() {}
+    virtual void print() {std::cout << "Mission ptiny" << std::endl;}
+    virtual void help() {}
+    virtual Type getTypeMission() {return Type::Other;}
+    virtual void save(std::ofstream& file){};
+    virtual void load(std::ifstream& file){};
 };
+
+
 
 #endif // MISSION_H
 
