@@ -11,8 +11,6 @@ public:
     Type getTypeMission();
     void save(std::ofstream& file);
     void load(std::ifstream& file);
-
-
 };
 
 #endif // RETURN_H

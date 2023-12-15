@@ -1,26 +1,8 @@
 #include "program.h"
-#include <iostream>
-#include<list>
-#include<memory>
 
-
-
-
-
-int main (int argc, char* argv[])
+int main ()
 { 
-    //std::unique_ptr<base> ptr(new A);
-
-    //ptr->prtint();
-
-    Program app;//(argv[1]);
+    Program app;
     app.run();
-
-
-
-
-
-
-
     return 0;
 }

@@ -45,7 +45,6 @@ void Lift::setData(double lift, Sensor sns, Action type)
 void Lift::save(std::ofstream& file)
 {
     file << "Lift to " << data.lift
-
          << " m use sensor " << (int)data.sns
          << " Type of movment " << (int)data.type <<   std::endl;
 }

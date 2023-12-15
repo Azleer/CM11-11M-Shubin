@@ -12,7 +12,7 @@ public:
     void setData(double x, double y, Action type, Sensor sns, double accuracy);
     void save(std::ofstream& file);
     void load(std::ifstream& file);
-
+    
 
     struct inf
     {

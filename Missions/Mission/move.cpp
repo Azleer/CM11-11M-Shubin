@@ -52,8 +52,6 @@ void Move::setData(double x, double y, Action type, Sensor sns, double accuracy)
     } else {
         std::cout << "Accuracy - out of range" << std::endl;
     }
-
-
 }
 
 void Move::save(std::ofstream& file)

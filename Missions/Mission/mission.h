@@ -4,12 +4,10 @@
 #include<iostream>
 #include<fstream>
 
-
 enum class Type   {Dive, Lift, Move, Return, Other};
 enum class Action {Stiral, Straight, Other};
 enum class Sensor {EchoSounder, Depth, Other};
 
-//Куку.
 class Mission {
 public:
     Mission() {}

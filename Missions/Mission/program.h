@@ -15,11 +15,11 @@ class Program
 {
 public:
     Program();
-    //Program(const char* file);
+
     void run();
 //private:
     void wf();
-    void non(); //Боже, это что-то стремное..
+    void non();
     void clear();
     void help();
     void exit();
@@ -33,7 +33,7 @@ public:
     void edit(const std::vector<std::string>& cmd);
     void mv(const std::vector<std::string>& cmd);
     void chk();
-    void lk(const std::vector<std::string>& cmd);
+    void lk();
 
     cmd hashit (std::string const& command );
     std::list<std::unique_ptr<Mission>>::iterator getIt(size_t index, bool &error);

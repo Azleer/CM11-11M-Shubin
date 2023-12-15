@@ -15,17 +15,16 @@
 
 
 
-Program::Program() //Открыть файл и заполнить структуру.
+Program::Program()
 {
 
-    // Структура миссий пустая.
+
 }
 
 void Program::run()
-{//enum class cmd {non, clear, help, exit, open, close, save, add, rm, ins, edit, mv, chk, lk};
+{
     while(!this->Exit)
     {
-       std::cout.flush();
        std:: cout <<"#> ";
        std::string cmd;
        std::getline(std::cin, cmd);
@@ -35,26 +34,23 @@ void Program::run()
        std::istream_iterator<std::string> end;
        std::vector<std::string> command(begin, end);
 
-
-
-
        switch (hashit(command[0]))
         {
-           case cmd::clear: { this->clear(); break; } //
-           case cmd::help:  { this->help();  break; }
-           case cmd::exit:  { this->exit();  break; }
-           case cmd::open:  { this->open(command[1]);  break; }
-           case cmd::close: { this->close(); break; }
-           case cmd::save:  { this->save();  break; }
-           case cmd::add:   { this->add(command);   break; }
-           case cmd::rm:    { this->rm(command);    break; }
-           case cmd::edit:  { this->edit(command);  break; }
-           case cmd::mv:    { this->mv(command);    break; }
-           case cmd::chk:   { this->chk();   break; }
-           case cmd::lk:    { this->lk(command);    break; }
-           case cmd::non:   { this->non();   break; }
-           case cmd::wf:   { this->wf();   break; }
-           case cmd::rename:   { this->rename(command[1]);   break; }
+           case cmd::clear: { this->clear();              break; } //
+           case cmd::help:  { this->help();               break; }
+           case cmd::exit:  { this->exit();               break; }
+           case cmd::open:  { this->open(command[1]);     break; }
+           case cmd::close: { this->close();              break; }
+           case cmd::save:  { this->save();               break; }
+           case cmd::add:   { this->add(command);         break; }
+           case cmd::rm:    { this->rm(command);          break; }
+           case cmd::edit:  { this->edit(command);        break; }
+           case cmd::mv:    { this->mv(command);          break; }
+           case cmd::chk:   { this->chk();                break; }
+           case cmd::lk:    { this->lk();                 break; }
+           case cmd::non:   { this->non();                break; }
+           case cmd::wf:    { this->wf();                 break; }
+           case cmd::rename:{ this->rename(command[1]);   break; }
 
         default:{
            std::cout << "There is no such command." << std::endl;
@@ -97,11 +93,11 @@ void Program::help()
 
     std::cout << "mv [destIndex] [sourceIndex] \t\t - Move mission lacated by [surceIndex] to [destIndex] location.\n"<< std::endl;
 
-     std::cout << "chk \t\t\t\t\t - Check the correctness of the mission.\n"<< std::endl;
-     std::cout << "lk \t\t\t\t\t - Print list of mission.\n"<< std::endl;
+    std::cout << "chk \t\t\t\t\t - Check the correctness of the mission.\n"<< std::endl;
+    std::cout << "lk \t\t\t\t\t - Print list of mission.\n"<< std::endl;
 
-     std::cout << "edit [Index] [arg_1] [arg_2] ... \t - Edit parameters of mission locaded by [index]. \n" << std::endl;
-     std::cout << "See the arguments depended on the type fo mission:" << std::endl;
+    std::cout << "edit [Index] [arg_1] [arg_2] ... \t - Edit parameters of mission locaded by [index]. \n" << std::endl;
+    std::cout << "See the arguments depended on the type fo mission:" << std::endl;
 
     std::cout << "Dive [depth] [sns] [type] \t\t - Dive to [depth], use sensor [sns]. Type of movment [type]. \n"
               << "\t\t\t\t\t - depth: [0,-100] m; \n"
@@ -144,7 +140,6 @@ void Program::open(std::string& filname)
 
 void Program::close()
 {
-
     if (is_save) {
         task.clear();
         this->filename = "";
@@ -153,7 +148,6 @@ void Program::close()
         std::cout << "Do you want to save the file? (y/n)"  << std::endl;
         while (!(ans == 'y' || ans == 'n')) {
             std::cin >> ans;
-
         }
         if (ans == 'n')
         {
@@ -162,15 +156,11 @@ void Program::close()
         }
         else
         {
-
             this->save();
             task.clear();
             this->filename = "";
         }
-
     }
-
-
 }
 
 void Program::save()
@@ -181,7 +171,6 @@ void Program::save()
         std::cout << "Enter file name" << std::endl;
         std::cin >> this->filename;
     }
-
     file.open(filename, std::ios_base::out);
     if(file.is_open()) {
         for (auto &i : task) {
@@ -193,7 +182,6 @@ void Program::save()
     {
         std::cout << "Error Open file: " << filename[1] << std::endl;
     }
-
     file.close();
 }
 
@@ -204,28 +192,32 @@ void Program::parse(std::string &data)
     std::istream_iterator<std::string> end;
     std::vector<std::string> token(begin, end);
 
-    if (token[0] == "Move") {
+    if (token[0] == "Move")
+    {
         this->countOfMission++;
         this->task.push_back(std::make_unique<Move>());
         auto ptr = dynamic_cast<Move*>(this->task.back().get());
         ptr->setData(std::stoi(token[3]), std::stoi(token[5]), (Action)std::stoi(token[17]), (Sensor)std::stoi(token[13]), std::stoi(token[9]));
         return;
     }
-    if (token[0] == "Dive") {
+    if (token[0] == "Dive")
+    {
         this->countOfMission++;
         this->task.push_back(std::make_unique<Dive>());
         auto ptr = dynamic_cast<Dive*>(this->task.back().get());
         ptr->setData(std::stoi(token[2]), (Sensor)std::stoi(token[6]), (Action)std::stoi(token[10]));
         return;
     }
-    if (token[0] == "Lift") {
+    if (token[0] == "Lift")
+    {
         this->countOfMission++;
         this->task.push_back(std::make_unique<Lift>());
         auto ptr = dynamic_cast<Lift*>(this->task.back().get());
         ptr->setData(std::stoi(token[2]), (Sensor)std::stoi(token[6]), (Action)std::stoi(token[10]));
         return;
     }
-    if (token[0] == "Return") {
+    if (token[0] == "Return")
+    {
         this->countOfMission++;
         this->task.push_back(std::make_unique<Return>());
         return;
@@ -240,11 +232,10 @@ void Program::rename(std::string& name )
 void Program::add(const std::vector<std::string> &cmd)
 {
     if(cmd[1] == "Dive")   {this->task.push_back(std::make_unique<Dive>());   is_save = false;  countOfMission++; return;}
-    if(cmd[1] == "Lift")   {this->task.push_back(std::make_unique<Lift>());   is_save = false;  countOfMission++;return;}
-    if(cmd[1] == "Move")   {this->task.push_back(std::make_unique<Move>());   is_save = false;  countOfMission++;return;}
-    if(cmd[1] == "Return") {this->task.push_back(std::make_unique<Return>()); is_save = false; countOfMission++;return;}
+    if(cmd[1] == "Lift")   {this->task.push_back(std::make_unique<Lift>());   is_save = false;  countOfMission++; return;}
+    if(cmd[1] == "Move")   {this->task.push_back(std::make_unique<Move>());   is_save = false;  countOfMission++; return;}
+    if(cmd[1] == "Return") {this->task.push_back(std::make_unique<Return>()); is_save = false;  countOfMission++; return;}
     std::cout << "No such mission" << std::endl;
-
 }
 
 void Program::rm(const std::vector<std::string>& cmd)
@@ -281,20 +272,17 @@ void Program::edit(const std::vector<std::string>& cmd)
         std::cout << "There are no missions." << std::endl;
         return;
     }
-    //if (cmd.size() > 2) { std::cout << "There are to many argument." << std::endl; return; }
-    //if (cmd.size() < 2) { std::cout << "There are to few argument."  << std::endl; return; }
     if (!this->is_number(cmd[1])) {
         std:: cout << "argument: " << cmd[1] << " no number!" << std::endl;
         return;
     }
-
     bool error = false;
     auto it = this->getIt(std::stoi(cmd[1]), error);
     if (!error)
     {
-
         this->editMode(cmd, it);
-    } else
+    }
+    else
     {
         std::cout << "No such index." << std::endl;
     }
@@ -317,8 +305,8 @@ void Program::mv(const std::vector<std::string>& cmd)
     {
        is_save = false;
        this->task.splice(lhs, this->task, rhs);
-
-    } else
+    }
+    else
     {
         std::cout << "No such index." << std::endl;
     }
@@ -328,7 +316,6 @@ void Program::chk()
 {
     int numberMission = 0;
     for (auto &v : this->task) {
-        //std::cout << (int)v.get()->getTypeMission() << std::endl;
         if(v.get()->getTypeMission() == Type::Return)
         {
             X += -X;
@@ -349,42 +336,32 @@ void Program::chk()
             auto ptr = dynamic_cast<Lift*>(v.get());
             Z = ptr->data.lift;
         }
-        //std::cout << X << ":" << Y << ":" << Z << std::endl;
-
         if( !((X>=0 && X<=10000) && (Y>=0 && Y<=10000) && (Z>=0 && Z <=100 )))
         {
             erors = true;
             std::cout << "ERROR The mission " << numberMission << " crouched down to a mistake." << std::endl;
             return;
         }
-
-
-
-
         numberMission++;
     }
-    //std::cout << (int)this->task.back().get()->mission << std::endl;
     if (this->task.back().get()->getTypeMission() != Type::Return) {
         std::cout << "Mission planning should end with a Return!" << std::endl;
         erors = true;
         return;
     }
-
     std::cout << "There are no mistakes" << std::endl;
 }
 
-void Program::lk(const std::vector<std::string>& cmd)
+void Program::lk()
 {
     int i = 0;
     if (countOfMission == 0) {std::cout << "There are no missions yet" << std::endl; return;}
-   // std::cout << "#############---Mission---#############" << std::endl;
-     std::cout << std::endl;
+    std::cout << std::endl;
     for (auto &v : this->task) {
         std::cout << i << ") ";
         v->print();
         i++;
     }
-    //std::cout << "#######################################" << std::endl;
     std::cout << std::endl;
 }
 
@@ -410,9 +387,7 @@ cmd Program::hashit(const std::string &command)
 
 std::list<std::unique_ptr<Mission>>::iterator Program::getIt(size_t index, bool &error)
 {
-
     std::list<std::unique_ptr<Mission>>::iterator it = this->task.begin();
-
     if (countOfMission < index)
     {
         error = true;
@@ -430,7 +405,6 @@ bool Program::is_number(std::string str)
     bool res = true;
     for (auto ch : str) {
         res *= (ch >= '0' && ch <= '9');
-
     }
     return res;
 }
